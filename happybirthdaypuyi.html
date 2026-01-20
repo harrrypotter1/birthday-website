@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 19th Birthday Purvi ❤️</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #fff0f5; /* Lavender Blush */
+            overflow-x: hidden;
+        }
+        
+        .font-handwriting {
+            font-family: 'Great Vibes', cursive;
+        }
+        
+        .font-playful {
+            font-family: 'Pacifico', cursive;
+        }
+
+        /* Floating Hearts Animation */
+        .floating-heart {
+            position: fixed;
+            color: #ffb7c5;
+            animation: floatUp 10s linear infinite;
+            z-index: 0;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) scale(0.5) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+        }
+
+        /* Fade In Animation */
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Photo Card Hover */
+        .photo-card {
+            transition: all 0.4s ease;
+        }
+        .photo-card:hover {
+            transform: scale(1.03) rotate(1deg);
+            box-shadow: 0 10px 25px -5px rgba(236, 72, 153, 0.4);
+            z-index: 10;
+        }
+
+        /* Confetti Logic handled in React, but CSS for particles */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            animation: confetti-fall 3s linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-10px) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(720deg); }
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fff0f5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fbcfe8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f472b6;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- Configuration: Add your photos here ---
+        // MAKE SURE THESE IMAGE FILES ARE IN THE SAME FOLDER AS THIS HTML FILE
+        const photoGallery = [
+            { id: 1, url: "./WhatsApp Image 2026-01-20 at 10.29.27 AM.jpeg", caption: "My cutieeee chakla ✨" },
+            { id: 2, url: "./WhatsApp Image 2026-01-20 at 10.35.00 AM.jpeg", caption: "Best day love you soo much 😊" },
+            { id: 3, url: "./WhatsApp Image 2026-01-20 at 10.29.26 AM.jpeg", caption: "me with my sundariiii 💕" },
+            { id: 4, url: "./WhatsApp Image 2026-01-20 at 10.35.01 AM (1).jpeg", caption: "Just us 💖" },
+            { id: 5, url: "./WhatsApp Image 2026-01-20 at 10.35.02 AM (2).jpeg", caption: "My Favourite smilee" },
+            { id: 6, url: "./WhatsApp Image 2026-01-20 at 10.34.59 AM.jpeg", caption: "My safe place 🏡" },
+            { id: 7, url: "./WhatsApp Image 2026-01-20 at 10.35.01 AM.jpeg", caption: "cuties together" },
+            { id: 8, url: "./WhatsApp Image 2026-01-20 at 10.34.59 AM (1).jpeg", caption: "Forever kind of love ♾️" },
+            { id: 9, url: "./WhatsApp Image 2026-01-20 at 10.35.01 AM (3).jpeg", caption: "So beautiful 🌸" },
+            { id: 10, url: "./WhatsApp Image 2026-01-20 at 10.35.02 AM.jpeg", caption: "Danger puyii " }
+        ];
+
+        // --- Helper Components ---
+
+        const FloatingHearts = () => {
+            const [hearts, setHearts] = useState([]);
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    const id = Math.random();
+                    const left = Math.random() * 100; // 0 to 100vw
+                    const size = Math.random() * 20 + 10; // 10px to 30px
+                    const duration = Math.random() * 5 + 5; // 5s to 10s
+                    
+                    setHearts(prev => [...prev, { id, left, size, duration }]);
+
+                    // Cleanup old hearts to prevent memory leak
+                    setTimeout(() => {
+                        setHearts(prev => prev.filter(h => h.id !== id));
+                    }, duration * 1000);
+                }, 800);
+
+                return () => clearInterval(interval);
+            }, []);
+
+            return (
+                <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+                    {hearts.map(heart => (
+                        <div
+                            key={heart.id}
+                            className="absolute text-pink-300 opacity-60"
+                            style={{
+                                left: `${heart.left}%`,
+                                fontSize: `${heart.size}px`,
+                                animation: `floatUp ${heart.duration}s linear`,
+                                bottom: '-50px'
+                            }}
+                        >
+                            <i data-lucide="heart"></i>
+                            ❤
+                        </div>
+                    ))}
+                </div>
+            );
+        };
+
+        const MusicPlayer = () => {
+            // Placeholder for music - standard browser policy prevents auto-play usually
+            // Just a visual element for now or you can add an audio tag
+            return null; 
+        };
+
+        // --- Main App Component ---
+
+        const App = () => {
+            const [page, setPage] = useState(1); // 1: Welcome, 2: Password, 3: Timeline, 4: Gallery
+            
+            // Password State
+            const [password, setPassword] = useState("");
+            const [error, setError] = useState("");
+            const [shake, setShake] = useState(false);
+
+            // Timeline Anniversary Counter State
+            const [timeTogether, setTimeTogether] = useState({ years: 0, months: 0, days: 0 });
+
+            useEffect(() => {
+                calculateTimeTogether();
+                const timer = setInterval(calculateTimeTogether, 1000 * 60 * 60); // Update every hour
+                return () => clearInterval(timer);
+            }, []);
+
+            const calculateTimeTogether = () => {
+                const start = new Date("2020-01-30");
+                const now = new Date();
+                
+                let years = now.getFullYear() - start.getFullYear();
+                let months = now.getMonth() - start.getMonth();
+                let days = now.getDate() - start.getDate();
+
+                if (days < 0) {
+                    months--;
+                    // Get days in previous month
+                    const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                    days += prevMonth.getDate();
+                }
+                if (months < 0) {
+                    years--;
+                    months += 12;
+                }
+                
+                setTimeTogether({ years, months, days });
+            };
+
+            const handlePasswordSubmit = (e) => {
+                e.preventDefault();
+                if (password.toLowerCase() === "takulovepuyi") {
+                    // Success!
+                    confettiEffect();
+                    setTimeout(() => setPage(3), 1500);
+                } else {
+                    setError("Oops! Try remembering our nicknames... 💕");
+                    setShake(true);
+                    setTimeout(() => setShake(false), 500);
+                }
+            };
+
+            const confettiEffect = () => {
+                const colors = ['#ff69b4', '#ff1493', '#ffd700', '#87ceeb'];
+                for (let i = 0; i < 100; i++) {
+                    const el = document.createElement('div');
+                    el.classList.add('confetti');
+                    el.style.left = Math.random() * 100 + 'vw';
+                    el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    el.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(el);
+                    setTimeout(() => el.remove(), 4000);
+                }
+            };
+
+            // --- Page 1: Welcome ---
+            if (page === 1) {
+                return (
+                    <div className="min-h-screen flex flex-col items-center justify-center relative bg-gradient-to-br from-pink-50 to-purple-50 p-4">
+                        <FloatingHearts />
+                        <div className="z-10 text-center fade-in">
+                            <h2 className="text-2xl text-pink-500 font-semibold mb-2 tracking-widest uppercase">It's a Special Day</h2>
+                            <h1 className="text-5xl md:text-7xl font-handwriting text-rose-500 mb-6 leading-tight">
+                                Happy 19th Birthday <br/> 
+                                <span className="text-purple-600">Love of My Life</span> <br/>
+                                Purvi Joshi
+                            </h1>
+                            <div className="bg-white/50 backdrop-blur-sm p-6 rounded-2xl shadow-xl inline-block mt-8 border border-pink-100">
+                                <p className="text-gray-600 mb-6 font-playful text-xl">Are you ready for your surprise?</p>
+                                <button 
+                                    onClick={() => setPage(2)}
+                                    className="bg-gradient-to-r from-pink-400 to-rose-500 text-white px-8 py-3 rounded-full text-xl font-bold hover:scale-105 transition-transform shadow-lg flex items-center gap-2 mx-auto"
+                                >
+                                    Yes, Continue! <span>❤️</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            // --- Page 2: Password ---
+            if (page === 2) {
+                return (
+                    <div className="min-h-screen flex flex-col items-center justify-center bg-pink-50 p-4 relative">
+                        <FloatingHearts />
+                        <div className={`bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full z-10 text-center border-2 border-pink-200 ${shake ? 'animate-bounce' : ''}`}>
+                            <div className="text-5xl mb-4">🔐</div>
+                            <h2 className="text-2xl font-bold text-gray-800 mb-2">Love Verification</h2>
+                            <p className="text-gray-500 mb-6">Prove you are the one I love.</p>
+                            
+                            <form onSubmit={handlePasswordSubmit} className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-pink-500 mb-1 text-left">Hint: Our nicknames joined by love 💕</label>
+                                    <input 
+                                        type="text" 
+                                        value={password}
+                                        onChange={(e) => {
+                                            setPassword(e.target.value);
+                                            setError("");
+                                        }}
+                                        className="w-full px-4 py-3 rounded-lg border-2 border-pink-100 focus:border-pink-400 focus:outline-none bg-pink-50 text-center text-lg placeholder-pink-200 text-pink-600"
+                                        placeholder="type here..."
+                                    />
+                                </div>
+                                {error && <p className="text-red-500 text-sm font-bold">{error}</p>}
+                                <button 
+                                    type="submit"
+                                    className="w-full bg-rose-500 text-white py-3 rounded-lg font-bold shadow-md hover:bg-rose-600 transition-colors"
+                                >
+                                    Unlock My Heart 🔓
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                );
+            }
+
+            // --- Page 3: Timeline ---
+            if (page === 3) {
+                return (
+                    <div className="min-h-screen bg-gradient-to-b from-pink-50 via-white to-purple-50 overflow-y-auto">
+                        <FloatingHearts />
+                        
+                        <div className="max-w-4xl mx-auto px-4 py-12 relative z-10">
+                            <h1 className="text-4xl md:text-5xl font-handwriting text-center text-rose-600 mb-12 fade-in">Our Beautiful Journey</h1>
+                            
+                            {/* Timeline Container */}
+                            <div className="relative border-l-4 border-pink-200 ml-4 md:ml-1/2 space-y-12 pl-8 md:pl-0">
+                                
+                                {/* Event 1 */}
+                                <div className="relative md:flex items-center justify-between group">
+                                    <div className="absolute -left-[42px] md:left-1/2 md:-ml-3 w-6 h-6 bg-pink-400 rounded-full border-4 border-white shadow-lg"></div>
+                                    <div className="md:w-[45%] mb-4 md:mb-0 md:text-right md:pr-8 fade-in">
+                                        <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border-b-4 border-pink-300">
+                                            <span className="bg-pink-100 text-pink-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">The Beginning</span>
+                                            <h3 className="text-2xl font-bold text-gray-800 mt-2">5th Grade</h3>
+                                            <p className="text-gray-600 mt-2">Where it all began... Two little kids who had no idea they were meeting their soulmate. Innocence turned into friendship.</p>
+                                        </div>
+                                    </div>
+                                    <div className="md:w-[45%]"></div>
+                                </div>
+
+                                {/* Event 2: Official Date */}
+                                <div className="relative md:flex items-center justify-between flex-row-reverse group">
+                                    <div className="absolute -left-[42px] md:left-1/2 md:-ml-3 w-6 h-6 bg-rose-500 rounded-full border-4 border-white shadow-lg z-10"></div>
+                                    <div className="md:w-[45%] mb-4 md:mb-0 md:pl-8 fade-in" style={{animationDelay: '0.3s'}}>
+                                        <div className="bg-gradient-to-br from-rose-50 to-pink-50 p-6 rounded-2xl shadow-lg border-2 border-rose-200">
+                                            <span className="bg-rose-100 text-rose-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Official Anniversary</span>
+                                            <h3 className="text-2xl font-bold text-gray-800 mt-2">January 30, 2020</h3>
+                                            <p className="text-gray-600 mt-2">The day we became official 💕</p>
+                                            
+                                            <div className="mt-4 p-4 bg-white rounded-xl shadow-inner text-center">
+                                                <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">We have been together for</p>
+                                                <div className="flex justify-center gap-4 text-rose-600 font-bold">
+                                                    <div className="flex flex-col"><span className="text-2xl">{timeTogether.years}</span><span className="text-xs text-gray-500 font-normal">Years</span></div>
+                                                    <div className="flex flex-col"><span className="text-2xl">{timeTogether.months}</span><span className="text-xs text-gray-500 font-normal">Months</span></div>
+                                                    <div className="flex flex-col"><span className="text-2xl">{timeTogether.days}</span><span className="text-xs text-gray-500 font-normal">Days</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="md:w-[45%]"></div>
+                                </div>
+
+                                {/* Event 3: Ups and Downs */}
+                                <div className="relative md:flex items-center justify-between group">
+                                    <div className="absolute -left-[42px] md:left-1/2 md:-ml-3 w-6 h-6 bg-purple-400 rounded-full border-4 border-white shadow-lg"></div>
+                                    <div className="md:w-[45%] mb-4 md:mb-0 md:text-right md:pr-8 fade-in" style={{animationDelay: '0.6s'}}>
+                                        <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border-b-4 border-purple-300">
+                                            <span className="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Growing Stronger</span>
+                                            <h3 className="text-2xl font-bold text-gray-800 mt-2">Through the Years</h3>
+                                            <p className="text-gray-600 mt-2">A lot of ups and downs came, arguments and tears, but our love was always stronger. We held hands through the storms and came out closer than ever.</p>
+                                        </div>
+                                    </div>
+                                    <div className="md:w-[45%]"></div>
+                                </div>
+
+                                {/* Event 4: College */}
+                                <div className="relative md:flex items-center justify-between flex-row-reverse group">
+                                    <div className="absolute -left-[42px] md:left-1/2 md:-ml-3 w-6 h-6 bg-blue-400 rounded-full border-4 border-white shadow-lg"></div>
+                                    <div className="md:w-[45%] mb-4 md:mb-0 md:pl-8 fade-in" style={{animationDelay: '0.9s'}}>
+                                        <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border-b-4 border-blue-300">
+                                            <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Current Chapter</span>
+                                            <h3 className="text-2xl font-bold text-gray-800 mt-2">1st Year College</h3>
+                                            <p className="text-gray-600 mt-2">New environment, new challenges, but same old us. Still together, still in love, building our future brick by brick.</p>
+                                        </div>
+                                    </div>
+                                    <div className="md:w-[45%]"></div>
+                                </div>
+
+                                {/* Event 5: Forever */}
+                                <div className="relative md:flex items-center justify-center pt-8">
+                                    <div className="bg-rose-500 text-white p-6 rounded-full shadow-2xl z-10 animate-pulse cursor-pointer hover:scale-110 transition-transform" onClick={() => setPage(4)}>
+                                        <div className="text-center">
+                                            <h3 className="text-xl font-bold font-playful">Forever & Always</h3>
+                                            <p className="text-xs mt-1">Click to see our memories</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            // --- Page 4: Photo Gallery ---
+            if (page === 4) {
+                return (
+                    <div className="min-h-screen bg-pink-50 p-4 md:p-8">
+                        <div className="max-w-6xl mx-auto">
+                            <div className="text-center mb-12 fade-in">
+                                <h2 className="text-3xl md:text-5xl font-handwriting text-rose-600 mb-4">Best Days of My Life</h2>
+                                <p className="text-gray-600 text-lg font-playful">"All the best days are with her only 💖"</p>
+                                <button 
+                                    onClick={() => setPage(3)} 
+                                    className="mt-4 text-sm text-pink-400 hover:text-pink-600 underline"
+                                >
+                                    ← Back to Timeline
+                                </button>
+                            </div>
+
+                            <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6 pb-20">
+                                {photoGallery.map((photo) => (
+                                    <div key={photo.id} className="break-inside-avoid photo-card bg-white p-2 rounded-xl shadow-md cursor-pointer">
+                                        <div className="relative overflow-hidden rounded-lg">
+                                            <img 
+                                                src={photo.url} 
+                                                alt="Love Memory" 
+                                                className="w-full h-auto object-cover transform transition-transform duration-500 hover:scale-110"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                                                <span className="text-white font-playful text-lg">{photo.caption}</span>
+                                            </div>
+                                        </div>
+                                        {/* Little heart decoration */}
+                                        <div className="flex justify-center -mt-3 relative z-10">
+                                            <div className="bg-white rounded-full p-1 shadow">
+                                                <svg className="w-5 h-5 text-rose-500 fill-current" viewBox="0 0 24 24">
+                                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="text-center pb-8 text-gray-400 text-sm">
+                                Made with ❤️ by Taku for Puyi
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+            
+            return null;
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
